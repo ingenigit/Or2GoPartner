@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	android:id="@+id/relativeLayoutTop"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:orientation="horizontal"
+	android:layout_margin="5dp"
+	android:padding="5dp"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+	<LinearLayout
+		android:id="@+id/LLayout1"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:layout_weight=".6"
+		android:orientation="horizontal">
+
+    	<TextView
+        	android:id="@+id/or2itemname"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:gravity="center"
+        	android:layout_gravity="center">
+    	</TextView>
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/LLayout5"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:layout_weight=".8"
+		android:orientation="horizontal">
+
+		<TextView
+			android:id="@+id/or2itemprice"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="right"
+			android:layout_gravity="center">
+		</TextView>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/LLayout3"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:gravity="end"
+		android:layout_weight=".9">
+
+		<TextView
+			android:id="@+id/or2itemqnty"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/LLayout4"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:layout_weight=".9"
+		android:gravity="start"
+		android:orientation="horizontal">
+		<TextView
+			android:id="@+id/or2itemunit"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/LLayout2"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:layout_weight=".8"
+		android:gravity="end"
+		android:orientation="horizontal">
+
+		<TextView
+			android:id="@+id/or2itemtotal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="right"
+			android:textStyle="bold"
+			android:layout_gravity="center">
+		</TextView>
+
+	</LinearLayout>
+    
+</LinearLayout>
