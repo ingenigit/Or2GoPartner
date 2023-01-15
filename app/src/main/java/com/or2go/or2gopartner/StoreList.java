@@ -1,11 +1,16 @@
 package com.or2go.or2gopartner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,6 +21,8 @@ import com.or2go.core.Or2goVendorInfo;
 import com.or2go.or2gopartner.Adapter.StoreListAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class StoreList extends AppCompatActivity {
     Context mContext;
@@ -23,10 +30,11 @@ public class StoreList extends AppCompatActivity {
     RecyclerView recyclerView;
     StoreListAdapter storeListAdapter;
     RecyclerView.LayoutManager layoutManager;
-//    ArrayList<Or2GoStore> storeList;
+    ArrayList<Or2GoStore> mStoreList;
     ArrayList<Or2GoStore> storeList;
     //
     String mOrderStatus;
+    Integer totNumber;
     OrderManager or2goMgr;
     ArrayList<Or2goOrderInfo> orderList = new ArrayList<Or2goOrderInfo>();
     @Override
@@ -54,16 +62,48 @@ public class StoreList extends AppCompatActivity {
         Log.i("OrderListActivity"," order count = "+orderList.size());
 
         storeList = gAppEnv.getVendorManager().getStoreList();
+        mStoreList = new ArrayList<>();
 
         recyclerView = (RecyclerView) findViewById(R.id.order_storeList);
+        for (int i=0; i<storeList.size(); i++) {
+            Or2GoStore or2GoStore = storeList.get(i);
+            String sskk = or2GoStore.vId;
+            for (int j = 0; j < orderList.size(); j++){
+                Or2goOrderInfo orderInfo = orderList.get(j);
+                String ssk = orderInfo.oStoreId;
+                if (ssk.equals(sskk)) {
+                    mStoreList.add(or2GoStore);
+                    break;
+                }
+            }
+        }
+        storeListAdapter = new StoreListAdapter(this, mStoreList, orderList, mOrderStatus);
         layoutManager =new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        storeListAdapter = new StoreListAdapter(this, storeList, orderList, mOrderStatus);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(storeListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+//        LocalBroadcastManager.getInstance(this).registerReceiver(mMessangeReceiver, new IntentFilter("totalOrder"));
+
+//        getSorted(storeList);
     }
 
+//    private void getSorted(ArrayList<Or2GoStore> storeList) {
+//        Collections.sort(storeList, new Comparator(){
+//            @Override
+//            public int compare(Object o, Object t1) {
+//                return totNumber;
+//            }
+//        });
+//    }
 
-
-
+//    public BroadcastReceiver mMessangeReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Integer number = intent.getIntExtra("tNumber", 0);
+//            totNumber = number;
+//            Toast.makeText(context, "kkml " + number, Toast.LENGTH_SHORT).show();
+//        }
+//    };
 }

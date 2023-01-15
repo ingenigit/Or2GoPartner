@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.or2go.core.Or2GoStore;
@@ -27,11 +28,11 @@ import java.util.ArrayList;
 public class StoreListAdapter extends RecyclerView.Adapter<StoreListAdapter.ViewHolder> {
 
     Context mContext;
-//    ArrayList<Or2GoStore> mStoreList;
     ArrayList<Or2GoStore> mStoreList;
     ArrayList<Or2goOrderInfo> orderList;
     Integer kkml = 0;
     String cPosition;
+
     public StoreListAdapter(Context mContext, ArrayList<Or2GoStore> mStoreList, ArrayList<Or2goOrderInfo> orderList, String position) {
         this.mContext = mContext;
         this.mStoreList = mStoreList;
@@ -69,7 +70,11 @@ public class StoreListAdapter extends RecyclerView.Adapter<StoreListAdapter.View
                 kkml = kkml + 1;
                 holder.textViewOrder.setText(String.valueOf(kkml));
             }
+//            Intent intent = new Intent("totalOrder");
+//            intent.putExtra("tNumber",kkml);
+//            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
         }
+
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
