@@ -52,12 +52,12 @@ public class Or2goListActivity extends AppCompatActivity {
             or2goMgr.getPendingOrderList(orderList, mvendorid);
         }
         else if (mOrderStatus.equals("processing")) {
-            or2goMgr.getProcessingingOrderList(orderList);
+            or2goMgr.getProcessingingOrderList(orderList, mvendorid);
         }
         else if (mOrderStatus.equals("ready"))
-            or2goMgr.getReadyOrderList(orderList);
+            or2goMgr.getReadyOrderList(orderList, mvendorid);
         else if (mOrderStatus.equals("delivery")) {
-            or2goMgr.getOnDeliveryOrderList(orderList);
+            or2goMgr.getOnDeliveryOrderList(orderList, mvendorid);
         }
 
         Log.i("OrderListActivity"," order count = "+orderList.size());
@@ -70,15 +70,19 @@ public class Or2goListActivity extends AppCompatActivity {
                 switch (mOrderStatus) {
                     case "pending":
                         intent.putExtra("orderstatus", "pending");
+                        intent.putExtra("ordervendorID", mvendorid);
                         break;
                     case "processing":
                         intent.putExtra("orderstatus", "processing");
+                        intent.putExtra("ordervendorID", mvendorid);
                         break;
                     case "ready":
                         intent.putExtra("orderstatus", "ready");
+                        intent.putExtra("ordervendorID", mvendorid);
                         break;
                     case "delivery":
                         intent.putExtra("orderstatus", "delivery");
+                        intent.putExtra("ordervendorID", mvendorid);
                         break;
                 }
                 startActivity(intent);
@@ -129,9 +133,11 @@ public class Or2goListActivity extends AppCompatActivity {
             if (mOrderStatus.equals("pending"))
                 or2goMgr.getPendingOrderList(orderList, mvendorid);
             else if (mOrderStatus.equals("processing"))
-                or2goMgr.getProcessingingOrderList(orderList);
+                or2goMgr.getProcessingingOrderList(orderList, mvendorid);
             else if (mOrderStatus.equals("ready"))
-                or2goMgr.getReadyOrderList(orderList);
+                or2goMgr.getReadyOrderList(orderList, mvendorid);
+            else if (mOrderStatus.equals("delivery"))
+                or2goMgr.getOnDeliveryOrderList(orderList, mvendorid);
             mAdapter.notifyDataSetChanged();
         }
 

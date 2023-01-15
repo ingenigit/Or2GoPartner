@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.or2go.core.Or2GoStore;
 import com.or2go.core.Or2goOrderInfo;
 import com.or2go.core.Or2goVendorInfo;
 import com.or2go.or2gopartner.Adapter.StoreListAdapter;
@@ -22,7 +23,8 @@ public class StoreList extends AppCompatActivity {
     RecyclerView recyclerView;
     StoreListAdapter storeListAdapter;
     RecyclerView.LayoutManager layoutManager;
-    ArrayList<Or2goVendorInfo> storeList;
+//    ArrayList<Or2GoStore> storeList;
+    ArrayList<Or2GoStore> storeList;
     //
     String mOrderStatus;
     OrderManager or2goMgr;

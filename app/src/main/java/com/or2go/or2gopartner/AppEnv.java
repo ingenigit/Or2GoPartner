@@ -5,6 +5,8 @@ import static com.or2go.core.Or2goConstValues.OR2GO_COMM_LOGOUT;
 import static com.or2go.core.Or2goConstValues.OR2GO_LOGIN_STATUS_NONE;
 import static com.or2go.core.Or2goConstValues.OR2GO_MAX_LOGIN_RETRY_COUNT;
 import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_DBVERSION_LIST;
+import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_LIST_PUBLIC;
+import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_PRODUCTLIST_REQ;
 
 import android.app.Application;
 import android.net.ConnectivityManager;
@@ -20,6 +22,7 @@ import com.or2go.or2gopartner.Thread.Or2goMsgHandler;
 import com.or2go.or2gopartner.server.Or2goLogoutCallback;
 import com.or2go.or2gopartner.server.StoreLoginCallback;
 import com.or2go.or2gopartner.server.VendorDBVersionListCallback;
+import com.or2go.or2gopartner.server.VendorListCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,6 +64,7 @@ public class AppEnv extends Application {
 
     public int InitGeniposEnv()
     {
+        Log.i("AppEnv", "Post Login Process Start");
         //if (DEBUG)
         //{
         gLogger = Or2GoLogger.getLogger();
@@ -86,7 +90,8 @@ public class AppEnv extends Application {
         gMsgHandler = new Or2goMsgHandler(this);
         gMsgHandler.start();
 
-
+        gDataSyncMgr = new DataSyncManager(this);
+        gDataSyncMgr.start();
 
 		/*
 		if (isRegistered())

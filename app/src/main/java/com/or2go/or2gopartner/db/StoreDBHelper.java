@@ -274,8 +274,8 @@ public class StoreDBHelper extends SQLiteOpenHelper {
 
     //////
     public ArrayList<Or2GoStore> getStores() {
-
-        ArrayList<Or2GoStore> vendList;
+        System.out.println("ghjkldiufhvncdb");
+        ArrayList<Or2GoStore> storeList;
         Cursor cursor;
         int count = 0;
 
@@ -286,7 +286,7 @@ public class StoreDBHelper extends SQLiteOpenHelper {
             return null;
         else
         {
-            vendList = new ArrayList<Or2GoStore>();
+            storeList = new ArrayList<Or2GoStore>();
 
             cursor.moveToFirst();
             for(int i=0;i<count;i++) {
@@ -320,12 +320,8 @@ public class StoreDBHelper extends SQLiteOpenHelper {
                 //String shuttill = cursor.getString(cursor.getColumnIndex("shuttill"));
                 //String shutres = cursor.getString(cursor.getColumnIndex("shutreason"));
                 //Integer shuttype = cursor.getInt(cursor.getColumnIndex("shuttype"));
-
-
-
                 if (vminord == null) vminord="0";
-
-
+                System.out.println("jfgn1"+ vid+ vname);
                 Or2GoStore storeinfo = new Or2GoStore(vid, vname, vservice, vstoretype, vdesc, tag,
                         vaddr, vplace, vlocality, vstate, vstatus,
                         vminord, voptime, vclosed, proddbver,infover,pricever, skuver, geolocation);
@@ -333,15 +329,11 @@ public class StoreDBHelper extends SQLiteOpenHelper {
                 storeinfo.setProductStatus(OR2GO_VENDOR_PRODUCTLIST_EXIST);
                 storeinfo.setOrderControl(ordcontrol);
                 storeinfo.setPayOption(payoption);
-                vendList.add(storeinfo);
-
+                storeList.add(storeinfo);
                 cursor.moveToNext();
             }
-
             cursor.close();
         }
-
-
-        return vendList;
+        return storeList;
     }
 }

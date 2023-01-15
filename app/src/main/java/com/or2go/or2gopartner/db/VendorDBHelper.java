@@ -329,7 +329,7 @@ public class VendorDBHelper extends SQLiteOpenHelper {
                 //String vaddr = vlocality + " , " + vplace;
 
                 if (vminord == null) vminord="0";
-
+                System.out.println("jfgn12"+ vid+ vname);
                 System.out.println("Vendor DB Load :  Vendor=+"+vid+"InfoVer:"+infover+ " ProductVer:"+proddbver+ " PriceVer"+pricever);
                 Or2goVendorInfo vendinfo = new Or2goVendorInfo(vid, vname, vtype, vstoretype, vdesc, tag, vaddr, vplace, vlocality, vstate, vstatus,
                         vminord, voptime, vclosed, logopath, dbname,proddbver,infover,pricever);

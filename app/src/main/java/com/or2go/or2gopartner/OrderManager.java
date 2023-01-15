@@ -59,6 +59,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 
 //import static com.or2go.store.Or2goConstValues.OR2GO_SP_CODE;
@@ -135,7 +136,7 @@ public class OrderManager {
         for(int i=0;i<ordsz;i++)
         {
             Or2goOrderInfo ordinfo =  mOrderList.get(i);
-            if (ordinfo.oStatus==ORDER_STATUS_PLACED && ordinfo.oStoreId == mvendorid)
+            if (ordinfo.oStatus==ORDER_STATUS_PLACED && Objects.equals(ordinfo.oStoreId, mvendorid))
                 list.add(ordinfo);
         }
         return true;
@@ -153,6 +154,17 @@ public class OrderManager {
         return true;
     }
 
+    public boolean getProcessingingOrderList(ArrayList<Or2goOrderInfo> list, String mvendorid) {
+        list.clear();
+        int ordsz = mOrderList.size();
+        for(int i=0;i<ordsz;i++)
+        {
+            Or2goOrderInfo ordinfo =  mOrderList.get(i);
+            if (ordinfo.oStatus==ORDER_STATUS_CONFIRMED && Objects.equals(ordinfo.oStoreId, mvendorid))
+                list.add(ordinfo);
+        }
+        return true;
+    }
     public boolean getProcessingingOrderList(ArrayList<Or2goOrderInfo> list) {
         list.clear();
         int ordsz = mOrderList.size();
@@ -160,6 +172,17 @@ public class OrderManager {
         {
             Or2goOrderInfo ordinfo =  mOrderList.get(i);
             if (ordinfo.oStatus==ORDER_STATUS_CONFIRMED)
+                list.add(ordinfo);
+        }
+        return true;
+    }
+    public boolean getReadyOrderList(ArrayList<Or2goOrderInfo> list, String mvendorid) {
+        list.clear();
+        int ordsz = mOrderList.size();
+        for(int i=0;i<ordsz;i++)
+        {
+            Or2goOrderInfo ordinfo =  mOrderList.get(i);
+            if (ordinfo.oStatus==ORDER_STATUS_READY && Objects.equals(ordinfo.oStoreId, mvendorid))
                 list.add(ordinfo);
         }
         return true;
@@ -176,6 +199,17 @@ public class OrderManager {
         return true;
     }
 
+    public boolean getOnDeliveryOrderList(ArrayList<Or2goOrderInfo> list, String mvendorid) {
+        list.clear();
+        int ordsz = mOrderList.size();
+        for(int i=0;i<ordsz;i++)
+        {
+            Or2goOrderInfo ordinfo =  mOrderList.get(i);
+            if (ordinfo.oStatus==ORDER_STATUS_PICKED_UP && Objects.equals(ordinfo.oStoreId, mvendorid))
+                list.add(ordinfo);
+        }
+        return true;
+    }
     public boolean getOnDeliveryOrderList(ArrayList<Or2goOrderInfo> list) {
         list.clear();
         int ordsz = mOrderList.size();

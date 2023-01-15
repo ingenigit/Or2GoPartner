@@ -106,7 +106,7 @@
                     vendinfo.setShutdownInfo(shutfrom,shuttill,"",0);
 
 
-                    gAppEnv.getVendorManager().updateVendor(vendinfo);
+//                    gAppEnv.getVendorManager().updateVendor(vendinfo);
 
                     gAppEnv.setSessionId(sessionid);
                     gAppEnv.setOr2goLoginStatus(OR2GO_LOGIN_STATUS_SUCCESS);

@@ -8,10 +8,13 @@ import static com.or2go.core.Or2goConstValues.OR2GO_VENDORLIST_NONE;
 import static com.or2go.core.Or2goConstValues.OR2GO_VENDORLIST_REQ;
 import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_DBVERSION_LIST;
 import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_INFO;
+import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_LIST_PUBLIC;
 import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_PRODUCTLIST_EXIST;
 import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_PRODUCTLIST_NONE;
 import static com.or2go.core.Or2goConstValues.OR2GO_VENDOR_PRODUCTLIST_REQ;
 import static com.or2go.core.VendorDBState.OR2GO_VENDOR_DB_DOWNLOAD_REQ;
+
+import static java.lang.Thread.sleep;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,6 +26,7 @@ import com.or2go.core.Or2GoStore;
 import com.or2go.core.Or2goVendorInfo;
 import com.or2go.core.VendorDBState;
 import com.or2go.or2gopartner.Thread.ProductDBSyncThread;
+import com.or2go.or2gopartner.Thread.VendorProductSyncThread;
 import com.or2go.or2gopartner.db.StoreDBHelper;
 import com.or2go.or2gopartner.db.VendorDBHelper;
 import com.or2go.or2gopartner.server.PriceListCallback;
@@ -30,6 +34,7 @@ import com.or2go.or2gopartner.server.ProductListCallback;
 import com.or2go.or2gopartner.server.StockOutCallback;
 import com.or2go.or2gopartner.server.StoreInfoCallback;
 import com.or2go.or2gopartner.server.VendorDBVersionListCallback;
+import com.or2go.or2gopartner.server.VendorListCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,27 +49,31 @@ public class VendorManager {
     VendorDBHelper mVendorDB;
     Or2goVendorInfo mVendorInfo=null;
     ProductManager mProductMgr;
-    LinkedHashMap<String, Or2goVendorInfo> mapStore;
+    StoreDBHelper mStoreDB;
+    LinkedHashMap<String, Or2GoStore> mapStore;
     private ProductDBSyncThread mProductDBSyncThread;
     HashMap<String, ProductManager> mapProductMgr;
-    ArrayList<Or2goVendorInfo> lActiveStoreList;
+    ArrayList<Or2GoStore> lActiveStoreList;
     ArrayList<String> lStoreUpdateList;
     VendorManager(Context context) {
         mContext = context;
         gAppEnv = (AppEnv) context;// getApplicationContext();
         mVendorId = gAppEnv.gAppSettings.getVendorId();
         gAppEnv.getGposLogger().d("VendorManager : Initializing vendor DB");
+        mStoreDB = new StoreDBHelper(mContext);
+        mStoreDB.initStoreDB();
         mVendorDB = new VendorDBHelper(mContext);
         mVendorDB.initVendorDB();
         stsVendorList = OR2GO_VENDORLIST_NONE;
-        mapStore = new LinkedHashMap<String, Or2goVendorInfo>();
-        lActiveStoreList = new ArrayList<Or2goVendorInfo>();
+        mapStore = new LinkedHashMap<String, Or2GoStore>();
+        lActiveStoreList = new ArrayList<Or2GoStore>();
         lStoreUpdateList = new ArrayList<String>();
         mapProductMgr = new HashMap<String, ProductManager>();
 
         int vendcnt = mVendorDB.getItemCount();
+        int storcnt = mStoreDB.getItemCount();
         Log.i("VendorManager", "vendor in DB=" + vendcnt);
-        if (vendcnt > 0) {
+        if (storcnt > 0) {
             Log.i("VendorManager", "Initializing vendor details form DB");
             initVendor();
         }
@@ -76,26 +85,29 @@ public class VendorManager {
 
     private void initVendor() {
 
-        ArrayList<Or2goVendorInfo> vendinfolist = mVendorDB.getVendors();
+        ArrayList<Or2GoStore> storelist = mStoreDB.getStores();
+        System.out.println("ndkjgdkj is" + storelist.size());
 
-        int vendcnt = vendinfolist.size();
+//        ArrayList<Or2goVendorInfo> vendinfolist = mVendorDB.getVendors();
+
+        int vendcnt = storelist.size();
         Log.i("VendorManager", "updating vendor count="+vendcnt);
 
         for (int i = 0; i < vendcnt; i++){
-            Or2goVendorInfo vendorInfo =vendinfolist.get(i);
+            Or2GoStore vendorInfo =storelist.get(i);
             mapStore.put(vendorInfo.vId, vendorInfo);
 //            Log.i("VendorManager", "saved vendor id="+mVendorInfo.vId+ "  name="+mVendorInfo.getName());
             Log.i("VendorManager", "saved vendor id="+vendorInfo.vId+ "  name="+vendorInfo.vName);
+            createVendorProductManager(vendorInfo.vId);
             vendorInfo.setProductStatus(OR2GO_VENDOR_PRODUCTLIST_EXIST);
         }
-        mVendorInfo = vendinfolist.get(0);
-
-        mProductMgr = new ProductManager(mContext);
-        int dbprdcnt = mProductMgr.getDbProductCount();
-        Log.i("VendorManager", "vendor="+mVendorId+"  product count="+dbprdcnt);
-        if (dbprdcnt > 0) {
-            mProductMgr.initProductsFromDB();
-        }
+//        mVendorInfo = vendinfolist.get(0);
+//        mProductMgr = new ProductManager(mContext);
+//        int dbprdcnt = mProductMgr.getDbProductCount();
+//        Log.i("VendorManager", "vendor="+mVendorId+"  product count="+dbprdcnt);
+//        if (dbprdcnt > 0) {
+//            mProductMgr.initProductsFromDB();
+//        }
 
 //        mVendorInfo.setProductStatus(OR2GO_VENDOR_PRODUCTLIST_EXIST);
 
@@ -154,6 +166,9 @@ public class VendorManager {
 
     public void setVendorId(String vendid) { mVendorId = vendid;}
     public ProductManager getProductManager(){return mProductMgr;}
+    public ProductManager getProductManager(String vid) {
+        return mapProductMgr.get(vid);
+    }
     public Or2goVendorInfo getVendorInfo(){return mVendorInfo;}
 
     public synchronized boolean updateProductDbVersion(Integer ver) {
@@ -349,15 +364,15 @@ public class VendorManager {
 //    }
 
     public synchronized boolean updateStoreVersions(String vid, String name, int infover, int prodver, int pricever, int skuver) {
-        Or2goVendorInfo storeinfo = getStoreById(vid);
+        Or2GoStore storeinfo = getStoreById(vid);
         System.out.println("gfhdjks,l" + name);
         if (storeinfo == null) {
             gAppEnv.getGposLogger().d("VendorManager : no vendor exists....adding new vendor ID="+vid);
 
             //Create new vendor
-            storeinfo = new Or2goVendorInfo(vid);
+            storeinfo = new Or2GoStore(vid, name);
             mapStore.put(vid, storeinfo);
-            mVendorDB.insertVendor(storeinfo);
+            mStoreDB.insertStore(storeinfo);
             createVendorProductManager(vid);
 
             storeinfo.isActive = true;
@@ -369,16 +384,16 @@ public class VendorManager {
             gAppEnv.getGposLogger().d("VendorManager : updating DB status for vendor "+storeinfo.getName());
             System.out.print("VendorManager : updating DB status for vendor "+storeinfo.getName());
 
-//            storeinfo.getDBState().updateVersion(infover);
-//            storeinfo.getProductDBState().updateVersion(prodver);
-//            storeinfo.getPriceDBState().updateVersion(pricever);
-//            storeinfo.getSKUDBState().updateVersion(skuver);
-//
-//            if (storeinfo.getInfoDBState().isRequiredDBDownload())  lStoreUpdateList.add(vid);
-//
-//            if (storeinfo.getProductDBState().isRequiredDBDownload()) {getProductManager(storeinfo.vId).clearProductData();}
-//            if (storeinfo.getPriceDBState().isRequiredDBDownload()) {getProductManager(storeinfo.vId).clearPriceData();}
-//            if (storeinfo.getSKUDBState().isRequiredDBDownload()) {getProductManager(storeinfo.vId).clearSKUData();}
+            storeinfo.getInfoDBState().updateVersion(infover);
+            storeinfo.getProductDBState().updateVersion(prodver);
+            storeinfo.getPriceDBState().updateVersion(pricever);
+            storeinfo.getSKUDBState().updateVersion(skuver);
+
+            if (storeinfo.getInfoDBState().isRequiredDBDownload())  lStoreUpdateList.add(vid);
+
+            if (storeinfo.getProductDBState().isRequiredDBDownload()) {getProductManager(storeinfo.vId).clearProductData();}
+            if (storeinfo.getPriceDBState().isRequiredDBDownload()) {getProductManager(storeinfo.vId).clearPriceData();}
+            if (storeinfo.getSKUDBState().isRequiredDBDownload()) {getProductManager(storeinfo.vId).clearSKUData();}
 
 
             storeinfo.isActive = true;
@@ -400,7 +415,7 @@ public class VendorManager {
         return true;
     }
 
-    public Or2goVendorInfo getStoreById(String id) {
+    public Or2GoStore getStoreById(String id) {
         return mapStore.get(id);
     }
 
@@ -408,7 +423,7 @@ public class VendorManager {
         stsVendorList = sts;
     }
 
-    public ArrayList<Or2goVendorInfo> getStoreList() {
+    public ArrayList<Or2GoStore> getStoreList() {
         return lActiveStoreList;
     }
 

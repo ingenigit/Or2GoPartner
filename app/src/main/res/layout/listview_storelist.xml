@@ -52,12 +52,21 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/imageActiveStatus"
+                            android:visibility="gone"
+                            android:id="@+id/imageActiveStatusOff"
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="center"
                             android:layout_margin="3dp"
                             android:src="@drawable/ic_offline_circle_24" />
+                        <ImageView
+                            android:visibility="gone"
+                            android:id="@+id/imageActiveStatusOn"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="3dp"
+                            android:src="@drawable/ic_online_circle_24" />
 
                         <TextView
                             android:id="@+id/tv_activeName"
@@ -75,6 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:paddingStart="5dp"
                     android:text="address" />
             </LinearLayout>
         </LinearLayout>
