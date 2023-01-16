@@ -52,8 +52,8 @@ public class StoreListAdapter extends RecyclerView.Adapter<StoreListAdapter.View
         Or2GoStore or2goVendorInfo = mStoreList.get(position);
         holder.textViewName.setText(or2goVendorInfo.vName);
         holder.textViewAddress.setText(or2goVendorInfo.vAddress);
-        holder.textViewStatus.setText(or2goVendorInfo.vStatus == 1 ? "Online" : "Offline");
-        if (or2goVendorInfo.vStatus == 1) {
+        holder.textViewStatus.setText(or2goVendorInfo.isOpen() ? "OPEN" : "CLOSE");
+        if (or2goVendorInfo.isOpen()) {
             holder.textViewStatus.setTextColor(Color.parseColor("#00FF00"));
             holder.imageViewStatusOn.setVisibility(View.VISIBLE);
             holder.imageViewStatusOff.setVisibility(View.GONE);

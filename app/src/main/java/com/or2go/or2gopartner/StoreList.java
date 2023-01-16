@@ -1,5 +1,6 @@
 package com.or2go.or2gopartner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -13,8 +14,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.or2go.core.Or2GoStore;
 import com.or2go.core.Or2goOrderInfo;
 import com.or2go.core.Or2goVendorInfo;
@@ -32,7 +35,7 @@ public class StoreList extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     ArrayList<Or2GoStore> mStoreList;
     ArrayList<Or2GoStore> storeList;
-    //
+    BottomNavigationView bottomNavigationView;
     String mOrderStatus;
     Integer totNumber;
     OrderManager or2goMgr;
@@ -84,6 +87,8 @@ public class StoreList extends AppCompatActivity {
         recyclerView.setAdapter(storeListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 //        LocalBroadcastManager.getInstance(this).registerReceiver(mMessangeReceiver, new IntentFilter("totalOrder"));
 
 //        getSorted(storeList);
@@ -106,4 +111,16 @@ public class StoreList extends AppCompatActivity {
 //            Toast.makeText(context, "kkml " + number, Toast.LENGTH_SHORT).show();
 //        }
 //    };
+
+    public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.ordersnavi_home:
+                    startActivity(new Intent(StoreList.this, MainActivity.class));
+                    return true;
+            }
+            return false;
+        }
+    };
 }

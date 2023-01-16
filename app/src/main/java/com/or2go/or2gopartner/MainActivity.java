@@ -2,6 +2,8 @@ package com.or2go.or2gopartner;
 
 import static com.or2go.core.Or2goConstValues.OR2GO_LOGIN_STATUS_NONE;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -13,6 +15,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -69,6 +73,25 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(this, MyService.class));
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.dash_navi, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.ordersnavi_logout:
+                Thread exitthread = new Thread(new AppExitThread());
+                exitthread.start();
+                logoutMonitor();
+                return true;
+        }
+        return false;
+    };
+
     private void logoutMonitor() {
         ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(MainActivity.this, R.style.Theme_Or2goProgressDialog);

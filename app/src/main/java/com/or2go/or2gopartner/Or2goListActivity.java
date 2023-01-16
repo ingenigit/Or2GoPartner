@@ -1,5 +1,6 @@
 package com.or2go.or2gopartner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -13,8 +14,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.or2go.core.Or2goOrderInfo;
 import com.or2go.or2gopartner.Adapter.Or2goListAdapter;
 
@@ -33,6 +36,7 @@ public class Or2goListActivity extends AppCompatActivity {
     String mOrderStatus, mvendorid;
     ArrayList<Or2goOrderInfo> orderList = new ArrayList<Or2goOrderInfo>();
     SwipeRefreshLayout refreshLayout;
+    BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +122,9 @@ public class Or2goListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         //mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView2);
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         //Register local briadcast for new orders
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("ORDER_STATUS_UPDATE"));
     }
@@ -142,4 +149,17 @@ public class Or2goListActivity extends AppCompatActivity {
         }
 
     };
+
+    public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.ordersnavi_home:
+                    startActivity(new Intent(Or2goListActivity.this, MainActivity.class));
+                    return true;
+            }
+            return false;
+        }
+    };
+
 }
